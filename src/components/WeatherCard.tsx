@@ -1,0 +1,124 @@
+import { useWeather } from "@/hooks/useWeather";
+
+import { format, fromUnixTime } from "date-fns";
+import {
+  MapPin,
+  Eye,
+  Wind,
+  Droplets,
+  Gauge,
+  Thermometer,
+  Sunrise,
+  Sunset,
+} from "lucide-react";
+
+const StatCard = ({ icon: Icon, label, value }) => (
+  <div className="flex flex-row items-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-1 sm:text-left md:items-start md:gap-2 md:p-4">
+    <Icon size={18} />
+    <div className="flex flex-col items-center text-sky-400 md:ml-5 md:gap-2">
+      <span className="text-xs text-slate-400 uppercase">{label}</span>
+      <p className="text-lg font-semibold">{value}</p>
+    </div>
+  </div>
+);
+
+export default function WeatherCard() {
+  const { currentWeather } = useWeather();
+
+  if (!currentWeather) {
+    return (
+      <div className="flex items-center justify-center bg-slate-950 p-4 text-slate-400">
+        Search for a city to see the weather.
+      </div>
+    );
+  }
+
+  const data = {
+    city: currentWeather?.city,
+    country: currentWeather?.country,
+    temp: currentWeather?.temp,
+    condition: currentWeather?.condition,
+    high: currentWeather?.high,
+    low: currentWeather?.low,
+    visibility: currentWeather?.visibility,
+    windSpeed: currentWeather?.windSpeed,
+    humidity: currentWeather?.humidity,
+    pressure: currentWeather?.pressure,
+    feelsLike: currentWeather?.feelsLike,
+    date: format(fromUnixTime(currentWeather?.dt), "EEEE, MMM d"),
+    time: format(fromUnixTime(currentWeather?.dt), "hh:mm a"),
+    sunrise: format(fromUnixTime(currentWeather?.sunrise), "hh:mm a"),
+    sunset: format(fromUnixTime(currentWeather?.sunset), "hh:mm a"),
+  };
+
+  const stats = [
+    { icon: Eye, label: "Visibility", value: data.visibility },
+    { icon: Wind, label: "Wind Speed", value: data.windSpeed },
+    { icon: Droplets, label: "Humidity", value: data.humidity },
+    { icon: Gauge, label: "Pressure", value: data.pressure },
+    { icon: Thermometer, label: "Feels Like", value: data.feelsLike },
+  ];
+
+  return (
+    <div className="flex items-center bg-slate-950 text-white">
+      <div className="w-full rounded-3xl border border-white/10 bg-slate-900 p-3 shadow-xl md:p-6">
+        {/* Header */}
+        <div className="mb-6 flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl bg-white/10 p-2">
+              <MapPin size={18} />
+            </div>
+            <div>
+              <h2 className="font-semibold">{data.city}</h2>
+              <p className="text-xs text-slate-400">{data.country}</p>
+            </div>
+          </div>
+
+          <div className="text-right text-xs text-slate-400">
+            <p>{data.date}</p>
+            <p>{data.time}</p>
+          </div>
+        </div>
+
+        {/* Temperature */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <div className="flex items-start">
+              <span className="text-xl font-bold md:text-5xl">{data.temp}</span>
+              <span className="ml-1 text-xl text-slate-400">°C</span>
+            </div>
+
+            <p className="mt-2 text-slate-300">{data.condition}</p>
+            <p className="text-xs text-slate-500">
+              H: {data.high}° L: {data.low}°
+            </p>
+          </div>
+
+          <div className="flex flex-col">
+            <img
+              src={`https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png`}
+              alt={currentWeather.description}
+              className="h-20 w-20"
+            />
+
+            <p className="mt-2 text-slate-300 capitalize">
+              {currentWeather.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-2 md:gap-4">
+          {stats.map((s, i) => (
+            <StatCard key={i} {...s} />
+          ))}
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2 md:gap-4">
+          <StatCard icon={Sunrise} label="Sunrise" value={data.sunrise} />
+          <StatCard icon={Sunset} label="Sunset" value={data.sunset} />
+        </div>
+      </div>
+    </div>
+  );
+}
