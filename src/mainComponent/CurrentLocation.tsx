@@ -3,31 +3,31 @@ import { useWeather } from "@/hooks/useWeather";
 import { MapPinIcon } from "lucide-react";
 import { useEffect } from "react";
 
-const currentLocation = () => {
+const CurrentLocation = () => {
   const { currentWeather, setCurrentWeather } = useWeather();
 
-  async function getLocationByIP() {
-    try {
-      const res = await fetch("http://ip-api.com/json/");
-      const data = await res.json();
-
-      if (data.status !== "success") throw new Error("IP lookup failed");
-
-      const weather = await getCityWeather(data.lat, data.lon);
-      setCurrentWeather(weather);
-    } catch (err) {
-      const weather = await getCityWeather(40.7128, -74.006);
-      setCurrentWeather(weather);
-      throw new Error(
-        "Failed to get location by IP, defaulting to New York",
-        err,
-      );
-    }
-  }
-
   useEffect(() => {
+    const getLocationByIP = async () => {
+      try {
+        const res = await fetch("http://ip-api.com/json/");
+        const data = await res.json();
+
+        if (data.status !== "success") throw new Error("IP lookup failed");
+
+        const weather = await getCityWeather(data.lat, data.lon);
+        setCurrentWeather(weather);
+      } catch (err) {
+        const weather = await getCityWeather(40.7128, -74.006);
+        setCurrentWeather(weather);
+        console.error(
+          "Failed to get location by IP, defaulting to New York",
+          err,
+        );
+      }
+    };
+
     getLocationByIP();
-  }, []);
+  }, [setCurrentWeather]);
 
   function getLocation() {
     if (navigator.geolocation) {
@@ -60,4 +60,4 @@ const currentLocation = () => {
   );
 };
 
-export default currentLocation;
+export default CurrentLocation;

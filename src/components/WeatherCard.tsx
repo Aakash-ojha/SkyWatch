@@ -11,8 +11,15 @@ import {
   Sunrise,
   Sunset,
 } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
-const StatCard = ({ icon: Icon, label, value }) => (
+type StatCardProps = {
+  icon: LucideIcon;
+  label: string;
+  value: string | number;
+};
+
+const StatCard = ({ icon: Icon, label, value }: StatCardProps) => (
   <div className="flex flex-row items-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-1 sm:text-left md:items-start md:gap-2 md:p-4">
     <Icon size={18} />
     <div className="flex flex-col items-center text-sky-400 md:ml-5 md:gap-2">
@@ -34,6 +41,7 @@ export default function WeatherCard() {
   }
 
   const data = {
+    unit: currentWeather?.unit,
     city: currentWeather?.city,
     country: currentWeather?.country,
     temp: currentWeather?.temp,
@@ -85,7 +93,12 @@ export default function WeatherCard() {
           <div>
             <div className="flex items-start">
               <span className="text-xl font-bold md:text-5xl">{data.temp}</span>
-              <span className="ml-1 text-xl text-slate-400">°C</span>
+              <span className="ml-1 text-xl text-slate-400">
+                {" "}
+                {data.unit === "standard"
+                  ? "K"
+                  : `${data.unit === "metric" ? "°C" : "°F"}`}
+              </span>
             </div>
 
             <p className="mt-2 text-slate-300">{data.condition}</p>

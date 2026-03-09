@@ -3,7 +3,7 @@ import { directGeoApi, foreCastApi, weatherApi } from "./weather";
 export const getCityWeather = async (
   lat: number,
   lon: number,
-  units: string = "metric",
+  units: string = "standard",
 ) => {
   try {
     const response = await weatherApi.get("/weather", {
@@ -18,6 +18,7 @@ export const getCityWeather = async (
     return {
       lat: lat,
       lon: lon,
+      unit: units,
       city: data.name,
       country: countryName ?? data.sys.country,
       temp: data.main.temp,
@@ -45,7 +46,7 @@ export const getCityWeather = async (
 export const getForecastWeather = async (
   lat: number,
   lon: number,
-  units: string = "metric",
+  units: string = "standard",
 ) => {
   try {
     const response = await foreCastApi.get("/forecast", {

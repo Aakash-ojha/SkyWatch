@@ -9,9 +9,7 @@ function ClickHandler() {
     null,
   );
 
-  const { setCurrentWeather } = useWeather();
-
-  console.log(clickedPosition);
+  const { setCurrentWeather, unit } = useWeather();
 
   useMapEvents({
     click: (e) => {
@@ -36,6 +34,7 @@ function ClickHandler() {
       const currentWeather = await getCityWeather(
         clickedPosition[0],
         clickedPosition[1],
+        unit,
       );
       setCurrentWeather(currentWeather);
     } catch (err) {

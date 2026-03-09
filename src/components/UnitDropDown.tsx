@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import type { Unit } from "@/types";
 
 import {
@@ -12,9 +10,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useWeather } from "@/hooks/useWeather";
+
+import { getCityWeather } from "@/api/weatherService";
 
 const UnitDropDown = () => {
-  const [unit, setUnit] = useState<Unit>("metric");
+  const { currentWeather, setCurrentWeather, unit, setUnit } = useWeather();
+
+  const hanldeRefetch = async (unit: string) => {
+    if (!currentWeather) return;
+    try {
+      const weather = await getCityWeather(
+        currentWeather.lat,
+        currentWeather.lon,
+        unit,
+      );
+      setCurrentWeather(weather);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -35,7 +50,10 @@ const UnitDropDown = () => {
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={unit}
-          onValueChange={(value) => setUnit(value as Unit)}
+          onValueChange={(value) => {
+            setUnit(value as Unit);
+            hanldeRefetch(value);
+          }}
         >
           <DropdownMenuRadioItem value="metric">
             Metric (°C)

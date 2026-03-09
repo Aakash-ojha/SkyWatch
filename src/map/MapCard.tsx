@@ -16,7 +16,6 @@ const MapCard = () => {
   return (
     <div className="z-0 h-100 w-full rounded-lg bg-gray-800 p-1 md:h-80 lg:h-150">
       <MapContainer
-        key={`${lat}-${lon}`}
         center={position}
         zoom={20}
         scrollWheelZoom={false}
@@ -28,8 +27,8 @@ const MapCard = () => {
         }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution="&copy; OpenStreetMap contributors"
         />
         <Marker position={position}>
           <Popup>

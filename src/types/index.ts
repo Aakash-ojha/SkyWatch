@@ -8,6 +8,7 @@ export interface ThemeContextType {
 export type Unit = "metric" | "imperial" | "standard";
 
 export type CurrentWeather = {
+  unit: string;
   lat: number;
   lon: number;
   city: string;
