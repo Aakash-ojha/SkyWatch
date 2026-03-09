@@ -1,40 +1,10 @@
 import "leaflet/dist/leaflet.css";
 
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { type LatLngTuple } from "leaflet";
-import { type LatLng } from "leaflet";
 import { useWeather } from "@/hooks/useWeather";
-import { useEffect, useState } from "react";
-
-function ZoomLocation({ position }: { position: LatLngTuple }) {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo(position, 13, {
-      duration: 1.5,
-    });
-  }, [position, map]);
-  return null;
-}
-
-function ClickHandler() {
-  const [clickedPosition, setClickedPosition] = useState<LatLng | null>(null);
-  console.log(clickedPosition);
-  useMapEvents({
-    click: (e) => {
-      setClickedPosition(e.latlng);
-    },
-  });
-
-  if (!clickedPosition) return null;
-  return null;
-}
+import ZoomLocation from "./ZoomLocation";
+import ClickHandler from "./ClickHandler";
 
 const MapCard = () => {
   const { currentWeather } = useWeather();
@@ -44,10 +14,11 @@ const MapCard = () => {
 
   const position: LatLngTuple = [lat, lon];
   return (
-    <div className="h-100 w-full rounded-lg bg-gray-800 p-1 md:h-80 lg:h-150">
+    <div className="z-0 h-100 w-full rounded-lg bg-gray-800 p-1 md:h-80 lg:h-150">
       <MapContainer
+        key={`${lat}-${lon}`}
         center={position}
-        zoom={13}
+        zoom={20}
         scrollWheelZoom={false}
         style={{
           padding: "3px",
@@ -62,7 +33,9 @@ const MapCard = () => {
         />
         <Marker position={position}>
           <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
+            {currentWeather
+              ? `${currentWeather.city}, ${currentWeather.country}`
+              : "Loading..."}
           </Popup>
         </Marker>
 

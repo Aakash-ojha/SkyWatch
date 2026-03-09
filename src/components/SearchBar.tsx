@@ -99,7 +99,7 @@ const SearchBar = () => {
       </DialogTrigger>
 
       <DialogContent
-        className="flex h-100 flex-col overflow-hidden sm:max-w-sm"
+        className="z-9999 flex h-100 flex-col overflow-hidden sm:max-w-sm"
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">Search Weather</DialogTitle>

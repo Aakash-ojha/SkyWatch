@@ -1,4 +1,4 @@
-import MapCard from "@/components/MapCard";
+import MapCard from "@/map/MapCard";
 import WeatherCard from "@/components/WeatherCard";
 
 const Home = () => {
