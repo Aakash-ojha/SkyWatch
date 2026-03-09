@@ -27,7 +27,7 @@ export default function WeatherCard() {
 
   if (!currentWeather) {
     return (
-      <div className="flex items-center justify-center bg-slate-950 p-4 text-slate-400">
+      <div className="flex animate-pulse items-center justify-center border-amber-50 bg-slate-950 p-4 text-slate-400">
         Search for a city to see the weather.
       </div>
     );

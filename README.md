@@ -1,7 +1,8 @@
+<<<<<<< HEAD
+
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
@@ -71,3 +72,9 @@ export default defineConfig([
   },
 ]);
 ```
+
+=======
+
+# SkyWatch
+
+> > > > > > > 4564e43b750165a7f0a6e3e43b4e2425ed79321d
