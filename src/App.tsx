@@ -1,6 +1,6 @@
 import TopAppBar from "@/mainComponent/TopAppBar";
 import Home from "./mainComponent/Home";
-import CurrentLocation from "./mainComponent/currentLocation";
+import CurrentLocation from "./mainComponent/CurrentLocation";
 
 const App = () => {
   return (
