@@ -1,14 +1,23 @@
 import "leaflet/dist/leaflet.css";
 
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import { type LatLngTuple } from "leaflet";
+import L, { type LatLngTuple } from "leaflet";
 import { useWeather } from "@/hooks/useWeather";
 import ZoomLocation from "./ZoomLocation";
 import ClickHandler from "./ClickHandler";
+import { renderToString } from "react-dom/server";
+import { MapPin } from "lucide-react";
+
+const customIcon = L.divIcon({
+  html: renderToString(<MapPin size={32} color="#aacbda" fill="#8e38f895" />),
+  className: "",
+
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
 
 const MapCard = () => {
   const { currentWeather } = useWeather();
-
   const lat = currentWeather?.lat || 0;
   const lon = currentWeather?.lon || 0;
 
@@ -30,7 +39,7 @@ const MapCard = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
-        <Marker position={position}>
+        <Marker position={position} icon={customIcon}>
           <Popup>
             {currentWeather
               ? `${currentWeather.city}, ${currentWeather.country}`
