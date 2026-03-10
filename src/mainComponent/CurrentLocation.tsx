@@ -1,10 +1,13 @@
 import { getCityWeather } from "@/api/weatherService";
 import { useWeather } from "@/hooks/useWeather";
+import type { Unit } from "@/types";
 import { MapPinIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const CurrentLocation = () => {
-  const { currentWeather, setCurrentWeather } = useWeather();
+  const { unit, currentWeather, setCurrentWeather } = useWeather();
+
+  const initialUnit = useRef<Unit>(unit);
 
   useEffect(() => {
     const getLocationByIP = async () => {
@@ -14,10 +17,18 @@ const CurrentLocation = () => {
 
         if (data.status !== "success") throw new Error("IP lookup failed");
 
-        const weather = await getCityWeather(data.lat, data.lon);
+        const weather = await getCityWeather(
+          data.lat,
+          data.lon,
+          initialUnit.current,
+        );
         setCurrentWeather(weather);
       } catch (err) {
-        const weather = await getCityWeather(40.7128, -74.006);
+        const weather = await getCityWeather(
+          40.7128,
+          -74.006,
+          initialUnit.current,
+        );
         setCurrentWeather(weather);
         console.error(
           "Failed to get location by IP, defaulting to New York",
@@ -35,7 +46,7 @@ const CurrentLocation = () => {
         const lat = location.coords.latitude;
         const lon = location.coords.longitude;
 
-        const weather = await getCityWeather(lat, lon);
+        const weather = await getCityWeather(lat, lon, unit);
         setCurrentWeather(weather);
       });
     } else {
@@ -44,7 +55,10 @@ const CurrentLocation = () => {
   }
 
   return (
-    <div className="mt-3 ml-8 flex flex-row items-center gap-2">
+    <div
+      className="onClick={getLocation} mt-3 ml-8 flex cursor-pointer flex-row items-center gap-2"
+      onClick={getLocation}
+    >
       <div className="flex flex-col items-center justify-center font-bold">
         <p className="">{currentWeather?.city}</p>
         <p className="text-xs font-bold text-gray-300">
@@ -53,7 +67,7 @@ const CurrentLocation = () => {
       </div>
 
       <div className="flex animate-pulse flex-row items-center gap-2 rounded-md bg-slate-700/50 px-3 py-1 text-sm text-gray-300">
-        <MapPinIcon className="h-5 w-5 cursor-pointer" onClick={getLocation} />
+        <MapPinIcon className="h-5 w-5 cursor-pointer" />
         <p>Use your Precise location</p>
       </div>
     </div>

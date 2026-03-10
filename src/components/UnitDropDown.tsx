@@ -17,7 +17,7 @@ import { getCityWeather } from "@/api/weatherService";
 const UnitDropDown = () => {
   const { currentWeather, setCurrentWeather, unit, setUnit } = useWeather();
 
-  const hanldeRefetch = async (unit: string) => {
+  const hanldeRefetch = async (unit: Unit) => {
     if (!currentWeather) return;
     try {
       const weather = await getCityWeather(
@@ -52,7 +52,7 @@ const UnitDropDown = () => {
           value={unit}
           onValueChange={(value) => {
             setUnit(value as Unit);
-            hanldeRefetch(value);
+            hanldeRefetch(value as Unit);
           }}
         >
           <DropdownMenuRadioItem value="metric">

@@ -20,7 +20,7 @@ import { getCityCoordinates, getCityWeather } from "@/api/weatherService";
 import { useWeather } from "@/hooks/useWeather";
 
 const SearchBar = () => {
-  const { setCurrentWeather } = useWeather();
+  const { unit, setCurrentWeather } = useWeather();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
@@ -48,12 +48,12 @@ const SearchBar = () => {
     try {
       // Implement logic to fetch and display weather data for the selected location, e.g., using the lat and lon to fetch weather data from an API
 
-      const response = await getCityWeather(lat, lon);
+      const response = await getCityWeather(lat, lon, unit);
 
       setCurrentWeather(response);
 
       setSearchDialogOpen(false);
-      setSearchQuery(" ");
+      setSearchQuery("");
     } catch (error) {
       console.error("Error fetching city coordinates:", error);
     }
@@ -72,7 +72,7 @@ const SearchBar = () => {
     return () => {
       window.removeEventListener("keydown", handleControlK);
     };
-  });
+  }, []);
 
   return (
     <Dialog open={searchDialogOpen} onOpenChange={setSearchDialogOpen}>

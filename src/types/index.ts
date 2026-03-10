@@ -12,6 +12,7 @@ export type CurrentWeather = {
   lat: number;
   lon: number;
   city: string;
+  state: string;
   country: string;
   temp: number;
   condition: string;

@@ -43,6 +43,7 @@ export default function WeatherCard() {
   const data = {
     unit: currentWeather?.unit,
     city: currentWeather?.city,
+    state: currentWeather?.state,
     country: currentWeather?.country,
     temp: currentWeather?.temp,
     condition: currentWeather?.condition,
@@ -78,7 +79,10 @@ export default function WeatherCard() {
             </div>
             <div>
               <h2 className="font-semibold">{data.city}</h2>
-              <p className="text-xs text-slate-400">{data.country}</p>
+              <p className="text-xs text-slate-400">
+                {data.state ? `${data.state}, ` : ""}
+                {data.country}
+              </p>
             </div>
           </div>
 

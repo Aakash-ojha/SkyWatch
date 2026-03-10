@@ -14,7 +14,6 @@ export const directGeoApi = axios.create({
   baseURL: DIRECT_GEO_BASE_URL,
   params: {
     appid: API_KEY,
-    units: "metric",
   },
 });
 
@@ -22,7 +21,6 @@ export const reverseGeoApi = axios.create({
   baseURL: DIRECT_GEO_BASE_URL,
   params: {
     appid: API_KEY,
-    units: "metric",
   },
 });
 
@@ -30,6 +28,5 @@ export const foreCastApi = axios.create({
   baseURL: "https://api.openweathermap.org/data/2.5",
   params: {
     appid: API_KEY,
-    units: "metric",
   },
 });

@@ -1,26 +1,31 @@
+import type { Unit } from "@/types";
 import { directGeoApi, foreCastApi, weatherApi } from "./weather";
 
 export const getCityWeather = async (
   lat: number,
   lon: number,
-  units: string = "standard",
+  units: Unit = "standard",
 ) => {
   try {
-    const response = await weatherApi.get("/weather", {
-      params: { lat, lon, units },
-    });
-    const data = response.data;
+    const [weatherResponse, reverseResponse] = await Promise.all([
+      weatherApi.get("/weather", { params: { lat, lon, units } }),
+      directGeoApi.get("/reverse", { params: { lat, lon, limit: 1 } }),
+    ]);
+
+    const data = weatherResponse.data;
+    const place = reverseResponse.data[0];
 
     const countryName = new Intl.DisplayNames(["en"], { type: "region" }).of(
-      data.sys.country,
+      place?.country ?? data.sys.country,
     );
 
     return {
-      lat: lat,
-      lon: lon,
+      lat,
+      lon,
       unit: units,
       city: data.name,
-      country: countryName ?? data.sys.country,
+      state: place?.state ?? "",
+      country: countryName ?? place?.country ?? data.sys.country,
       temp: data.main.temp,
       condition: data.weather[0].main,
       high: data.main.temp_max,
@@ -64,6 +69,7 @@ export const getCityCoordinates = async (city: string) => {
     const response = await directGeoApi.get("/direct", {
       params: { q: city, limit: 5 },
     });
+    console.log("getCityCoordinates", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching city coordinates:", error);
