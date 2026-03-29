@@ -1,7 +1,7 @@
 import TopAppBar from "@/mainComponent/TopAppBar";
 import Home from "./mainComponent/Home";
 import CurrentLocation from "./mainComponent/CurrentLocation";
-// import ForecastSection from "./chart/ForecastSection";
+import ForecastSection from "./chart/ForecastSection";
 import Footer from "./components/Footer";
 
 const App = () => {
@@ -10,7 +10,10 @@ const App = () => {
       <TopAppBar />
       <CurrentLocation />
       <Home />
-      {/* <ForecastSection /> */}
+
+      <div className="p-5">
+        <ForecastSection />
+      </div>
 
       <Footer />
     </div>

@@ -1,4 +1,4 @@
-import type { Unit } from "@/types";
+import type { DailyForecast, ForecastListItem, Unit } from "@/types";
 import { directGeoApi, foreCastApi, weatherApi } from "./weather";
 
 export const getCityWeather = async (
@@ -57,7 +57,44 @@ export const getForecastWeather = async (
     const response = await foreCastApi.get("/forecast", {
       params: { lat, lon, units },
     });
-    return response.data;
+
+    //  data get from list only
+    const list: ForecastListItem[] = response.data.list;
+
+    const daily = list.reduce(
+      (acc: DailyForecast[], item: ForecastListItem) => {
+        const day = item.dt_txt.split(" ")[0];
+
+        const existing = acc.find((d) => d.date === day);
+
+        if (existing) {
+          existing.high = Math.max(existing.high, item.main.temp_max);
+          existing.low = Math.min(existing.low, item.main.temp_min);
+        } else {
+          acc.push({
+            date: day,
+            high: item.main.temp_max,
+            low: item.main.temp_min,
+            temp: item.main.temp,
+            feelsLike: item.main.feels_like,
+            humidity: item.main.humidity,
+            pressure: item.main.pressure,
+            windSpeed: item.wind.speed,
+            clouds: item.clouds.all,
+            pop: item.pop ?? 0,
+            visibility: item.visibility,
+            icon: item.weather[0].icon,
+            condition: item.weather[0].main,
+            description: item.weather[0].description,
+          });
+        }
+
+        return acc;
+      },
+      [],
+    );
+
+    return { daily, hourly: list };
   } catch (error) {
     console.error("Error fetching forecast:", error);
     throw error;

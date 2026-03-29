@@ -30,3 +30,37 @@ export type CurrentWeather = {
   sunrise: number;
   sunset: number;
 };
+
+export type ForecastListItem = {
+  dt_txt: string;
+  main: {
+    temp: number;
+    temp_min: number;
+    temp_max: number;
+    feels_like: number;
+    humidity: number;
+    pressure: number;
+  };
+  weather: { main: string; icon: string; description: string }[];
+  wind: { speed: number };
+  clouds: { all: number };
+  pop: number;
+  visibility: number;
+};
+
+export type DailyForecast = {
+  date: string;
+  high: number;
+  low: number;
+  temp: number;
+  feelsLike: number;
+  humidity: number;
+  pressure: number;
+  windSpeed: number;
+  clouds: number;
+  pop: number;
+  visibility: number;
+  icon: string;
+  condition: string;
+  description: string;
+};

@@ -6,70 +6,88 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
+import type { Tab } from ".";
+import { getForecastWeather } from "@/api/weatherService";
+import OverviewTab from "./tabs/OverviewTab";
+import type { DailyForecast } from "@/types";
+
+const TABS_LIST = [
+  {
+    title: "Overview",
+    value: "overview",
+  },
+  {
+    title: "Precipitation",
+    value: "precipitation",
+  },
+  {
+    title: "Wind",
+    value: "wind",
+  },
+  {
+    title: "Humidity",
+    value: "humidity",
+  },
+  {
+    title: "Cloud cover",
+    value: "cloudCover",
+  },
+  {
+    title: "Pressure",
+    value: "pressure",
+  },
+  {
+    title: "UV",
+    value: "uv",
+  },
+  {
+    title: "Visibility",
+    value: "visibility",
+  },
+  {
+    title: "Feels like",
+    value: "feelsLike",
+  },
+];
+
 const ForecastTabs = () => {
+  const [tabs, setTabs] = useState<Tab>("overview");
+  const [daily, setDaily] = useState<DailyForecast[]>();
+  const [hourly, setHourly] = useState<ForecastListItem[]>();
+
+  useEffect(() => {
+    const fetchForcastWeather = async () => {
+      const { daily, hourly } = await getForecastWeather(51.5074, -0.1278);
+      setDaily(daily);
+      setHourly(hourly);
+    };
+    fetchForcastWeather();
+  }, []);
+
   return (
-    <Tabs defaultValue="overview" className="w-100">
-      <TabsList>
-        <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        <TabsTrigger value="reports">Reports</TabsTrigger>
-        <TabsTrigger value="settings">Settings</TabsTrigger>
-      </TabsList>
+    <Tabs
+      value={tabs}
+      defaultValue="overview"
+      className="mt-2 w-full"
+      onValueChange={(value) => setTabs(value as Tab)}
+    >
+      <div className="w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none]">
+        <TabsList className="bg-background flex w-max gap-3">
+          {TABS_LIST.map((item) => (
+            <TabsTrigger
+              key={item.value}
+              value={item.value}
+              className="bg-secondary data-[state=active]:text-background h-9 rounded-full border-none px-4 data-[state=active]:bg-orange-500!"
+            >
+              {item.title}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
+
       <TabsContent value="overview">
-        <Card>
-          <CardHeader>
-            <CardTitle>Overview</CardTitle>
-            <CardDescription>
-              View your key metrics and recent project activity. Track progress
-              across all your active projects.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            You have 12 active projects and 3 pending tasks.
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="analytics">
-        <Card>
-          <CardHeader>
-            <CardTitle>Analytics</CardTitle>
-            <CardDescription>
-              Track performance and user engagement metrics. Monitor trends and
-              identify growth opportunities.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            Page views are up 25% compared to last month.
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="reports">
-        <Card>
-          <CardHeader>
-            <CardTitle>Reports</CardTitle>
-            <CardDescription>
-              Generate and download your detailed reports. Export data in
-              multiple formats for analysis.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            You have 5 reports ready and available to export.
-          </CardContent>
-        </Card>
-      </TabsContent>
-      <TabsContent value="settings">
-        <Card>
-          <CardHeader>
-            <CardTitle>Settings</CardTitle>
-            <CardDescription>
-              Manage your account preferences and options. Customize your
-              experience to fit your needs.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-muted-foreground text-sm">
-            Configure notifications, security, and themes.
-          </CardContent>
-        </Card>
+        <OverviewTab data={hourly} />
       </TabsContent>
     </Tabs>
   );
