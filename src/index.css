@@ -150,3 +150,13 @@
 .animate-spin-slow {
   animation: spin-slow 10s linear infinite;
 }
+
+.recharts-wrapper:focus,
+.recharts-wrapper *:focus {
+  outline: none;
+}
+
+.recharts-wrapper:focus-visible,
+.recharts-wrapper *:focus-visible {
+  outline: revert; /* Restores the default outline for keyboard users */
+}
