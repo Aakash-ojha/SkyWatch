@@ -61,11 +61,34 @@ export default function WeatherCard() {
   };
 
   const stats = [
-    { icon: Eye, label: "Visibility", value: data.visibility },
-    { icon: Wind, label: "Wind Speed", value: data.windSpeed },
-    { icon: Droplets, label: "Humidity", value: data.humidity },
-    { icon: Gauge, label: "Pressure", value: data.pressure },
-    { icon: Thermometer, label: "Feels Like", value: data.feelsLike },
+    {
+      icon: Eye,
+      label: "Visibility",
+      value:
+        currentWeather.unit === "imperial"
+          ? `${(currentWeather.visibility / 1609).toFixed(1)} mi`
+          : `${(currentWeather.visibility / 1000).toFixed(1)} km`,
+    },
+    {
+      icon: Wind,
+      label: "Wind Speed",
+      value:
+        currentWeather.unit === "imperial"
+          ? `${currentWeather.windSpeed} mph`
+          : `${currentWeather.windSpeed} m/s`,
+    },
+    { icon: Droplets, label: "Humidity", value: `${currentWeather.humidity}%` },
+    { icon: Gauge, label: "Pressure", value: `${currentWeather.pressure} hPa` },
+    {
+      icon: Thermometer,
+      label: "Feels Like",
+      value:
+        currentWeather.unit === "standard"
+          ? `${currentWeather.feelsLike} K`
+          : currentWeather.unit === "metric"
+            ? `${currentWeather.feelsLike}°C`
+            : `${currentWeather.feelsLike}°F`,
+    },
   ];
 
   return (

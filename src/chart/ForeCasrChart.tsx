@@ -46,7 +46,10 @@ const ForecastChart = ({
       const hour12 = hour % 12 === 0 ? 12 : hour % 12;
 
       // handle nested fields like item.main.humidity
-      const value = (item.main as any)[dataKey] ?? (item as any)[dataKey] ?? 0;
+      const value =
+        (item.main && dataKey in item.main
+          ? (item.main as Record<string, number>)[dataKey]
+          : (item as unknown as Record<string, number>)[dataKey]) ?? 0;
 
       return { time: `${hour12} ${ampm}`, value: Math.round(value) };
     });
@@ -86,7 +89,7 @@ const ForecastChart = ({
               <TabsTrigger
                 key={r.label}
                 value={r.label}
-                className="px-5 py-2 text-sm font-medium text-white/50 transition-all duration-200 data-[state=active]:!bg-blue-500 data-[state=active]:!text-white"
+                className="px-5 py-2 text-sm font-medium text-white/50 transition-all duration-200 data-[state=active]:bg-blue-500! data-[state=active]:text-white!"
               >
                 {r.label}
               </TabsTrigger>

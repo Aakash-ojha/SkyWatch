@@ -1,19 +1,13 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import type { Tab } from ".";
 import { getForecastWeather } from "@/api/weatherService";
 import OverviewTab from "./tabs/OverviewTab";
-import type { DailyForecast, ForecastListItem } from "@/types";
+
 import { useWeather } from "@/hooks/useWeather";
 import ForecastChart from "./ForeCasrChart";
 import PreciptationTab from "./tabs/PreciptationTab";
+import type { ForecastListItem } from "@/types";
 
 const TABS_LIST = [
   {
@@ -85,19 +79,19 @@ const TABS_LIST = [
 const ForecastTabs = () => {
   const { currentWeather, unit } = useWeather();
   const [tabs, setTabs] = useState<Tab>("overview");
-  const [daily, setDaily] = useState<DailyForecast[]>();
+
   const [hourly, setHourly] = useState<ForecastListItem[]>();
 
   useEffect(() => {
     if (!currentWeather) return;
 
     const fetchForcastWeather = async () => {
-      const { daily, hourly } = await getForecastWeather(
+      const { hourly } = await getForecastWeather(
         currentWeather.lat,
         currentWeather.lon,
         currentWeather.unit,
       );
-      setDaily(daily);
+
       setHourly(hourly);
     };
     fetchForcastWeather();

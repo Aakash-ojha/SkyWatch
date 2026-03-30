@@ -17,8 +17,18 @@ const RANGES = [
   { label: "48h", count: 16 },
   { label: "5d", count: 40 },
 ];
+interface ChartData {
+  time: string;
+  pop: number;
+  rain: number;
+  snow: number;
+}
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: { payload: ChartData }[];
+}
 
-const CustomTooltip = ({ active, payload }: any) => {
+const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
@@ -91,7 +101,7 @@ const PrecipitationTab = ({
               <TabsTrigger
                 key={r.label}
                 value={r.label}
-                className="px-5 py-2 text-sm font-medium text-white/50 transition-all duration-200 data-[state=active]:!bg-blue-500 data-[state=active]:!text-white"
+                className="px-5 py-2 text-sm font-medium text-white/50 transition-all duration-200 data-[state=active]:bg-blue-500! data-[state=active]:text-white!"
               >
                 {r.label}
               </TabsTrigger>

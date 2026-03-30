@@ -46,6 +46,12 @@ export type ForecastListItem = {
   clouds: { all: number };
   pop: number;
   visibility: number;
+  rain?: {
+    "3h": number;
+  };
+  snow?: {
+    "3h": number;
+  };
 };
 
 export type DailyForecast = {

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import type { ForecastListItem, Unit } from "@/types";
 import {
   AreaChart,
@@ -8,12 +7,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
-  Legend,
 } from "recharts";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMemo, useState } from "react";
 
 const RANGES = [
@@ -27,8 +23,20 @@ const getTempSymbol = (unit: Unit) => {
   if (unit === "imperial") return "°F";
   return "K"; // standard = Kelvin
 };
+interface ChartData {
+  time: string;
+  pop: number;
+  rain: number;
+  snow: number;
+}
 
-const CustomTooltip = ({ active, payload, unit }: any) => {
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: { payload: ChartData; value: number; dataKey: string }[];
+  unit: Unit;
+}
+
+const CustomTooltip = ({ active, payload, unit }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
   const temp = payload[0].value;
   const time = payload[0].payload.time;
