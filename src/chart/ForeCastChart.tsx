@@ -28,6 +28,38 @@ type ForecastChartProps = {
   chartType: "area" | "bar";
 };
 
+// -------------------- Custom Tooltip --------------------
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: { payload: { time: string; value: number }; value: number }[];
+  unit: string;
+  title: string;
+}
+
+const CustomTooltip = ({
+  active,
+  payload,
+  unit,
+  title,
+}: CustomTooltipProps) => {
+  if (!active || !payload?.length) return null;
+
+  const value = payload[0].value;
+  const time = payload[0].payload.time;
+
+  return (
+    <div className="rounded-xl border border-blue-300/25 bg-slate-950/95 px-4 py-3 text-xs shadow-2xl backdrop-blur-md">
+      <p className="text-white/50">{time}</p>
+      <p className="text-sm font-bold text-blue-300">
+        {value}
+        {unit}
+      </p>
+      <p className="text-xs text-white/40">{title}</p>
+    </div>
+  );
+};
+
+// -------------------- ForecastChart Component --------------------
 const ForecastChart = ({
   data,
   title,
@@ -45,7 +77,6 @@ const ForecastChart = ({
       const ampm = hour >= 12 ? "PM" : "AM";
       const hour12 = hour % 12 === 0 ? 12 : hour % 12;
 
-      // handle nested fields like item.main.humidity
       const value =
         (item.main && dataKey in item.main
           ? (item.main as Record<string, number>)[dataKey]
@@ -66,6 +97,7 @@ const ForecastChart = ({
 
   return (
     <div className="w-full rounded-2xl p-4">
+      {/* Header + Range Tabs */}
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-col items-start gap-1">
           <h2 className="font-semibold text-white">{title}</h2>
@@ -98,6 +130,7 @@ const ForecastChart = ({
         </Tabs>
       </div>
 
+      {/* Chart */}
       <ResponsiveContainer width="100%" height={300}>
         {chartType === "bar" ? (
           <BarChart
@@ -119,11 +152,11 @@ const ForecastChart = ({
               stroke="transparent"
               tickLine={false}
               tick={{ fontSize: 11, fill: "rgba(255,255,255,0.35)" }}
-              tickFormatter={(v) => `${v}${unit}`}
               width={45}
+              tickFormatter={(v) => `${v}${unit}`}
             />
             <Tooltip
-              formatter={(v) => [`${v}${unit}`, title]}
+              content={<CustomTooltip unit={unit} title={title} />}
               cursor={{ fill: "rgba(255,255,255,0.05)" }}
             />
             <Bar dataKey="value" fill={color} radius={[4, 4, 0, 0]} />
@@ -160,11 +193,11 @@ const ForecastChart = ({
               stroke="transparent"
               tickLine={false}
               tick={{ fontSize: 11, fill: "rgba(255,255,255,0.35)" }}
-              tickFormatter={(v) => `${v}${unit}`}
               width={45}
+              tickFormatter={(v) => `${v}${unit}`}
             />
             <Tooltip
-              formatter={(v) => [`${v}${unit}`, title]}
+              content={<CustomTooltip unit={unit} title={title} />}
               cursor={{ stroke: "rgba(255,255,255,0.1)", strokeWidth: 1 }}
             />
             <Area

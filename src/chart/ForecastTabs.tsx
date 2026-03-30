@@ -5,7 +5,7 @@ import { getForecastWeather } from "@/api/weatherService";
 import OverviewTab from "./tabs/OverviewTab";
 
 import { useWeather } from "@/hooks/useWeather";
-import ForecastChart from "./ForeCasrChart";
+import ForecastChart from "./ForeCastChart";
 import PreciptationTab from "./tabs/PreciptationTab";
 import type { ForecastListItem } from "@/types";
 
