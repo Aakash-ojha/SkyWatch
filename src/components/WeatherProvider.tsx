@@ -4,7 +4,7 @@ import { useState } from "react";
 
 const WeatherProvider = ({ children }: { children: React.ReactNode }) => {
   const [unit, setUnit] = useState<Unit>(() => {
-    return (localStorage.getItem("weatherUnit") as Unit) ?? "standard";
+    return (localStorage.getItem("weatherUnit") as Unit) ?? "metric";
   });
 
   const [currentWeather, setCurrentWeather] = useState<

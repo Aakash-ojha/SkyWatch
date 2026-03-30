@@ -10,60 +10,99 @@ import { useEffect, useState } from "react";
 import type { Tab } from ".";
 import { getForecastWeather } from "@/api/weatherService";
 import OverviewTab from "./tabs/OverviewTab";
-import type { DailyForecast } from "@/types";
+import type { DailyForecast, ForecastListItem } from "@/types";
+import { useWeather } from "@/hooks/useWeather";
+import ForecastChart from "./ForeCasrChart";
+import PreciptationTab from "./tabs/PreciptationTab";
 
 const TABS_LIST = [
   {
     title: "Overview",
     value: "overview",
+    dataKey: "",
+    color: "",
+    unit: "",
+    chartType: "area",
   },
   {
     title: "Precipitation",
     value: "precipitation",
+    dataKey: "pop",
+    color: "#06b6d4",
+    unit: "%",
+    chartType: "bar",
   },
   {
     title: "Wind",
     value: "wind",
+    dataKey: "wind_speed",
+    color: "#8b5cf6",
+    unit: "m/s",
+    chartType: "area",
   },
   {
     title: "Humidity",
     value: "humidity",
+    dataKey: "humidity",
+    color: "#10b981",
+    unit: "%",
+    chartType: "bar",
   },
   {
     title: "Cloud cover",
     value: "cloudCover",
+    dataKey: "all",
+    color: "#94a3b8",
+    unit: "%",
+    chartType: "bar",
   },
   {
     title: "Pressure",
     value: "pressure",
-  },
-  {
-    title: "UV",
-    value: "uv",
+    dataKey: "pressure",
+    color: "#f59e0b",
+    unit: "hPa",
+    chartType: "area",
   },
   {
     title: "Visibility",
     value: "visibility",
+    dataKey: "visibility",
+    color: "#64748b",
+    unit: "m",
+    chartType: "area",
   },
   {
     title: "Feels like",
     value: "feelsLike",
+    dataKey: "feels_like",
+    color: "#ec4899",
+    unit: "",
+    chartType: "area",
   },
 ];
 
 const ForecastTabs = () => {
+  const { currentWeather, unit } = useWeather();
   const [tabs, setTabs] = useState<Tab>("overview");
   const [daily, setDaily] = useState<DailyForecast[]>();
   const [hourly, setHourly] = useState<ForecastListItem[]>();
 
   useEffect(() => {
+    if (!currentWeather) return;
+
     const fetchForcastWeather = async () => {
-      const { daily, hourly } = await getForecastWeather(51.5074, -0.1278);
+      const { daily, hourly } = await getForecastWeather(
+        currentWeather.lat,
+        currentWeather.lon,
+        currentWeather.unit,
+      );
       setDaily(daily);
       setHourly(hourly);
     };
     fetchForcastWeather();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWeather?.lat, currentWeather?.lon, currentWeather?.unit]);
 
   return (
     <Tabs
@@ -86,9 +125,31 @@ const ForecastTabs = () => {
         </TabsList>
       </div>
 
-      <TabsContent value="overview">
-        <OverviewTab data={hourly} />
-      </TabsContent>
+      <div className="mt-5 bg-slate-900/40">
+        <TabsContent value="overview">
+          <OverviewTab data={hourly} unit={unit} />
+        </TabsContent>
+
+        <TabsContent value="precipitation">
+          <PreciptationTab data={hourly} />
+        </TabsContent>
+
+        {/* All other tabs use ForecastChart */}
+        {TABS_LIST.filter(
+          (t) => t.value !== "overview" && t.value !== "precipitation",
+        ).map((tab) => (
+          <TabsContent key={tab.value} value={tab.value}>
+            <ForecastChart
+              data={hourly}
+              title={tab.title}
+              dataKey={tab.dataKey}
+              color={tab.color}
+              unit={tab.unit}
+              chartType={tab.chartType as "area" | "bar"}
+            />
+          </TabsContent>
+        ))}
+      </div>
     </Tabs>
   );
 };
